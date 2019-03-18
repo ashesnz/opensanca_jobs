@@ -1,5 +1,5 @@
 # build stage
-FROM ruby:2.5.0-alpine
+FROM ruby:2.5.0-alpine AS builder
 
 ARG build_without
 ARG rails_env="development"
@@ -45,8 +45,8 @@ RUN apk add --update --no-cache \
     postgresql-client \
     $extra_packages
 
-COPY /usr/local/bundle/ /usr/local/bundle/
-COPY /var/app /var/app
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+COPY --from=builder /var/app /var/app
 
 ENV RAILS_LOG_TO_STDOUT true
 
